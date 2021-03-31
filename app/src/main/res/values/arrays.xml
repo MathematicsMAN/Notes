@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="notes_titles">
+        <item>Первая запись</item>
+        <item>Вторая запись</item>
+        <item>Третья запись</item>
+        <item>Четвёртая запись</item>
+    </string-array>
+
+    <string-array name="notes_description">
+        <item>Завести блокнот заметок</item>
+        <item>Выполнить первый пункт</item>
+        <item>Поставить галочку о выполнении</item>
+        <item>Закрыть блокнот</item>
+    </string-array>
+
+    <string-array name="notes_data_of_created">
+        <item>2021.03.31</item>
+        <item>2021.03.31</item>
+        <item>2021.03.31</item>
+        <item>2021.03.31</item>
+    </string-array>
+
+</resources>

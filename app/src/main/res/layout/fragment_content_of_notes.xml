@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ContentOfNotesFragment">
+
+    <TextView
+        android:id="@+id/title_of_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/text_size" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_date_of_create"
+        android:textSize="@dimen/text_view_size" />
+
+    <EditText
+        android:id="@+id/date_of_created_notes"
+        style="@android:style/Holo.SegmentedButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:focusedByDefault="false"
+        android:inputType="date"
+        android:textSize="@dimen/text_size" />
+
+    <DatePicker
+        android:id="@+id/date_picker"
+        style="@android:style/Holo.SegmentedButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:calendarViewShown="false"
+        android:spinnersShown="false"
+        android:visibility="gone" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/text_content"
+        android:textSize="@dimen/text_view_size" />
+
+    <EditText
+        android:id="@+id/description_of_notes"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@android:color/transparent"
+        android:focusedByDefault="true"
+        android:inputType="textMultiLine"
+        android:scrollbars="vertical"
+        android:textSize="@dimen/text_size" />
+
+</LinearLayout>
