@@ -1,7 +1,9 @@
 package com.example.notes;
 
+import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,9 +18,9 @@ import java.util.Calendar;
 
 public class ContentOfNotesFragment extends Fragment {
 
-    public static final String ARG_INDEX = "index";
     public static final String KEY_NOTES = "NOTES";
-    private int index;
+    private final String LOG = "NOTES";
+
     private Notes notes;
     private DatePicker datePicker;
 
@@ -26,10 +28,9 @@ public class ContentOfNotesFragment extends Fragment {
     private AppCompatEditText descriptionOfNotes;
     private AppCompatEditText dateOfNotes;
 
-    public static ContentOfNotesFragment newInstance(int index, Notes notes) {
+    public static ContentOfNotesFragment newInstance(Notes notes) {
         ContentOfNotesFragment fragment = new ContentOfNotesFragment();
         Bundle args = new Bundle();
-        args.putInt(ARG_INDEX, index);
         args.putSerializable(KEY_NOTES, notes);
         fragment.setArguments(args);
         return fragment;
@@ -39,11 +40,11 @@ public class ContentOfNotesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            index = getArguments().getInt(ARG_INDEX);
             notes = (Notes) getArguments().getSerializable(KEY_NOTES);
         }
     }
 
+    @SuppressLint("DefaultLocale")
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -63,18 +64,24 @@ public class ContentOfNotesFragment extends Fragment {
         datePicker.setVisibility(DatePicker.GONE);
         Calendar today = Calendar.getInstance();
 
-        datePicker.init(today.get(Calendar.YEAR), today.get(Calendar.MONTH),
-                today.get(Calendar.DAY_OF_MONTH), (view1, year, monthOfYear, dayOfMonth) ->
-                    dateOfNotes.setText(year + "." + (monthOfYear + 1) + "." + dayOfMonth)
-                );
+        datePicker.init(today.get(Calendar.YEAR),
+                today.get(Calendar.MONTH),
+                today.get(Calendar.DAY_OF_MONTH),
+                (view1, year, monthOfYear, dayOfMonth) ->
+                        dateOfNotes.setText(String.format("%d.%d.%d",
+                                year,
+                                monthOfYear + 1,
+                                dayOfMonth))
+        );
 
         dateOfNotes.setOnFocusChangeListener((v, hasFocus) -> {
             if (hasFocus) {
                 datePicker.setVisibility(DatePicker.VISIBLE);
             } else {
-                dateOfNotes.setText(datePicker.getYear() + "."
-                        + (datePicker.getMonth() + 1) + "."
-                        + datePicker.getDayOfMonth());
+                dateOfNotes.setText(String.format("%d.%d.%d",
+                        datePicker.getYear(),
+                        datePicker.getMonth() + 1,
+                        datePicker.getDayOfMonth()));
                 datePicker.setVisibility(DatePicker.GONE);
             }
         });
@@ -83,7 +90,7 @@ public class ContentOfNotesFragment extends Fragment {
             datePicker.setVisibility(DatePicker.GONE);
             dateOfNotes.clearFocus();
         });
-
+        Log.d(LOG, "ContentOfNotesFragment.onCreateView()");
 
         return view;
     }
@@ -96,5 +103,7 @@ public class ContentOfNotesFragment extends Fragment {
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_NOTES, notes);
         setArguments(bundle);
+
+        Log.d(LOG, "ContentOfNotesFragment.onPause()");
     }
 }
