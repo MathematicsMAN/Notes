@@ -5,6 +5,10 @@
         <item>Вторая запись</item>
         <item>Третья запись</item>
         <item>Четвёртая запись</item>
+        <item>Пятая запись</item>
+        <item>Шестая запись</item>
+        <item>Седьмая запись</item>
+        <item>Восьмая запись</item>
     </string-array>
 
     <string-array name="notes_description">
@@ -12,9 +16,17 @@
         <item>Выполнить первый пункт</item>
         <item>Поставить галочку о выполнении</item>
         <item>Закрыть блокнот</item>
+        <item>Завести блокнот заметок</item>
+        <item>Выполнить первый пункт</item>
+        <item>Поставить галочку о выполнении</item>
+        <item>Закрыть блокнот</item>
     </string-array>
 
     <string-array name="notes_data_of_created">
+        <item>2021.03.31</item>
+        <item>2021.03.31</item>
+        <item>2021.03.31</item>
+        <item>2021.03.31</item>
         <item>2021.03.31</item>
         <item>2021.03.31</item>
         <item>2021.03.31</item>

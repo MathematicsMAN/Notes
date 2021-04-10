@@ -16,4 +16,6 @@
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
     <string name="drawer_about">О программе</string>
+    <string name="text_in_check_as_completed">Выполнено</string>
+    <string name="edit">Edit</string>
 </resources>
