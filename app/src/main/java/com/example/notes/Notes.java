@@ -5,13 +5,13 @@ import java.io.Serializable;
 public class Notes implements Serializable {
     private final String title;
     private String description;
-    private String dataOfCreated;
+    private String dateOfCreated;
     private boolean asChecked;
 
-    public Notes(String title, String description, String dataOfCreated, boolean asChecked) {
+    public Notes(String title, String description, String dateOfCreated, boolean asChecked) {
         this.title = title;
         this.description = description;
-        this.dataOfCreated = dataOfCreated;
+        this.dateOfCreated = dateOfCreated;
         this.asChecked = asChecked;
     }
 
@@ -27,12 +27,12 @@ public class Notes implements Serializable {
         this.description = description;
     }
 
-    public String getDataOfCreated() {
-        return dataOfCreated;
+    public String getDateOfCreated() {
+        return dateOfCreated;
     }
 
-    public void setDataOfCreated(String dataOfCreated) {
-        this.dataOfCreated = dataOfCreated;
+    public void setDateOfCreated(String dateOfCreated) {
+        this.dateOfCreated = dateOfCreated;
     }
 
     public boolean isAsChecked() {

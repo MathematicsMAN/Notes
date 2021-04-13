@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.DatePicker;
 
 import androidx.annotation.RequiresApi;
@@ -19,7 +20,8 @@ import java.util.Calendar;
 public class ContentOfNotesFragment extends Fragment {
 
     public static final String KEY_NOTES = "NOTES";
-    private final String LOG = "NOTES";
+    public static final String KEY_POSITION = "POSITION";
+    private final String LOG = "ContentOfNotesFragment";
 
     private Notes notes;
     private DatePicker datePicker;
@@ -27,6 +29,8 @@ public class ContentOfNotesFragment extends Fragment {
     private AppCompatTextView titleOfNotes;
     private AppCompatEditText descriptionOfNotes;
     private AppCompatEditText dateOfNotes;
+    private Button saveButton;
+    private Button cancelButton;
 
     public static ContentOfNotesFragment newInstance(Notes notes) {
         ContentOfNotesFragment fragment = new ContentOfNotesFragment();
@@ -42,6 +46,7 @@ public class ContentOfNotesFragment extends Fragment {
         if (getArguments() != null) {
             notes = (Notes) getArguments().getSerializable(KEY_NOTES);
         }
+        Log.d(LOG, "onCreate()");
     }
 
     @SuppressLint("DefaultLocale")
@@ -52,13 +57,22 @@ public class ContentOfNotesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_content_of_notes, container, false);
 
         titleOfNotes = view.findViewById(R.id.title_of_notes);
-        titleOfNotes.setText(notes.getTitle());
-
         descriptionOfNotes = view.findViewById(R.id.description_of_notes);
-        descriptionOfNotes.setText(notes.getDescription());
-
         dateOfNotes = view.findViewById(R.id.date_of_created_notes);
-        dateOfNotes.setText(notes.getDataOfCreated());
+        createContext();
+
+        saveButton = view.findViewById(R.id.save_notes);
+        saveButton.setOnClickListener(v -> {
+            saveInstance();
+        });
+
+        cancelButton = view.findViewById(R.id.cancel_notes);
+        cancelButton.setOnClickListener(v -> {
+            if (getArguments() != null) {
+                notes = (Notes) getArguments().getSerializable(KEY_NOTES);
+                createContext();
+            }
+        });
 
         datePicker = view.findViewById(R.id.date_picker);
         datePicker.setVisibility(DatePicker.GONE);
@@ -90,20 +104,29 @@ public class ContentOfNotesFragment extends Fragment {
             datePicker.setVisibility(DatePicker.GONE);
             dateOfNotes.clearFocus();
         });
-        Log.d(LOG, "ContentOfNotesFragment.onCreateView()");
+        Log.d(LOG, "onCreateView()");
 
         return view;
+    }
+
+    private void createContext() {
+        titleOfNotes.setText(notes.getTitle());
+        descriptionOfNotes.setText(notes.getDescription());
+        dateOfNotes.setText(notes.getDateOfCreated().toString());
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        notes.setDataOfCreated(dateOfNotes.getText().toString());
+        saveInstance();
+        Log.d(LOG, "onPause()");
+    }
+
+    private void saveInstance() {
+        notes.setDateOfCreated(dateOfNotes.getText().toString());
         notes.setDescription(descriptionOfNotes.getText().toString());
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_NOTES, notes);
         setArguments(bundle);
-
-        Log.d(LOG, "ContentOfNotesFragment.onPause()");
     }
 }
