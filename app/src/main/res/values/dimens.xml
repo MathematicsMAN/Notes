@@ -2,4 +2,6 @@
 <resources>
     <dimen name="text_size">20sp</dimen>
     <dimen name="text_view_size">10sp</dimen>
+    <dimen name="nav_header_height">90dp</dimen>
+    <dimen name="nav_header_dimen">30sp</dimen>
 </resources>

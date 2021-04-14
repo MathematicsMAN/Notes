@@ -5,4 +5,15 @@
     <string name="button_text">Add new notes</string>
     <string name="text_date_of_create">Дата создания:</string>
     <string name="text_content">Содержимое:</string>
+    <string name="menu_add">Add ...</string>
+    <string name="menu_delete">Delete</string>
+    <string name="search">Search</string>
+    <string name="popup_rename">Rename</string>
+    <string name="popup_add">Add new notes</string>
+    <string name="popup_delete">Delete this</string>
+    <string name="popup_clear">Clear list</string>
+    <string name="fragment_navigation">My Notes</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+    <string name="drawer_about">О программе</string>
 </resources>
