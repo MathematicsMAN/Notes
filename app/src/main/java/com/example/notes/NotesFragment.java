@@ -17,12 +17,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 public class NotesFragment extends Fragment {
 
     private final String LOG = "NOTES";
 
-    private Notes[] notesList;
+    private CardSource<Notes> cardSource;
+    private NotesAdapter adapter;
     private Notes currentNote;
     private int currentIndex;
     private boolean isLandscape;
@@ -40,33 +43,12 @@ public class NotesFragment extends Fragment {
     }
 
     private void initList(View view) {
-        LinearLayout layoutView = (LinearLayout) view;
-        String[] notesTitle = getResources().getStringArray(R.array.notes_titles);
-        String[] description = getResources().getStringArray(R.array.notes_description);
-        String[] dataOfCreated = getResources().getStringArray(R.array.notes_data_of_created);
-        notesList = new Notes[notesTitle.length];
+        RecyclerView recyclerView = view.findViewById(R.id.recycler_view_lines);
+        cardSource = new CardSourceImpl(getResources()).init();
+        adapter = new NotesAdapter(cardSource);
 
-        for (int i = 0; i < notesTitle.length; i++) {
-            Notes notes = new Notes(notesTitle[i], description[i], dataOfCreated[i]);
-            notesList[i] = notes;
-
-            TextView tv = new TextView(getContext());
-            tv.setText(notesTitle[i]);
-            tv.setTextSize(30);
-            layoutView.addView(tv);
-
-            final int index = i;
-            tv.setOnClickListener(v -> {
-                currentNote = notes;
-                currentIndex = index;
-                showContentOfNotes(currentNote);
-            });
-            tv.setOnLongClickListener(v -> {
-                        initPopupMenu(tv);
-                        return true;
-                    }
-            );
-        }
+        recyclerView.setAdapter(adapter);
+        recyclerView.setLayoutManager(new LinearLayoutManager(this.getContext()));
         Log.d(LOG, "NotesFragment.initList()");
     }
 
@@ -98,7 +80,7 @@ public class NotesFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(ContentOfNotesFragment.KEY_NOTES, currentNote);
+//        outState.putSerializable(ContentOfNotesFragment.KEY_NOTES, currentNote);
         super.onSaveInstanceState(outState);
     }
 
@@ -110,12 +92,11 @@ public class NotesFragment extends Fragment {
                 Configuration.ORIENTATION_LANDSCAPE;
 
         if (savedInstanceState != null) {
-            currentNote = (Notes) savedInstanceState.getSerializable(ContentOfNotesFragment.KEY_NOTES);
-            notesList[currentIndex] = currentNote;
+//            currentNote = (Notes) savedInstanceState.getSerializable(ContentOfNotesFragment.KEY_NOTES);
+            currentNote = cardSource.getCardData(0);
+//            notesList[currentIndex] = currentNote;
         } else {
-            currentNote = new Notes(notesList[0].getTitle(),
-                    notesList[0].getDescription(),
-                    notesList[0].getDataOfCreated());
+            currentNote = cardSource.getCardData(0);
         }
 
         if (isLandscape) {

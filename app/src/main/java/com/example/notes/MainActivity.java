@@ -12,6 +12,9 @@ import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 
@@ -83,9 +86,14 @@ public class MainActivity extends AppCompatActivity {
             case R.id.menu_delete:
                 Toast.makeText(this, "to delete notes", Toast.LENGTH_SHORT).show();
                 return true;
+            case R.id.menu_edit:
+                //TODO Это заглушка. Редактирование конкретной карточки надо сделать при её выборе
+                //и вызова setOnClickListener()
+                Toast.makeText(this, "to edit notes", Toast.LENGTH_SHORT).show();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
-
-        return super.onOptionsItemSelected(item);
     }
 
     @Override
