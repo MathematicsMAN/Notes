@@ -10,7 +10,7 @@
     <string name="navigation_drawer_close">close</string>
     <string name="text_in_check_as_completed">Выполнено</string>
     <string name="menu_search">Search</string>
-    <string name="menu_add">Add ...</string>
+    <string name="menu_add">Add …</string>
     <string name="menu_clear">Clear</string>
     <string name="popup_edit">Edit</string>
     <string name="popup_delete">Delete this</string>
@@ -21,4 +21,6 @@
     <string name="drawer_about">О программе</string>
     <string name="button_save">Save</string>
     <string name="button_cancel">Cancel</string>
+    <string name="popup_clear">Clear all</string>
+    <string name="popup_add">Add new</string>
 </resources>

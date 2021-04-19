@@ -15,7 +15,10 @@ import androidx.appcompat.widget.AppCompatEditText;
 import androidx.appcompat.widget.AppCompatTextView;
 import androidx.fragment.app.Fragment;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 
 public class ContentOfNotesFragment extends Fragment {
 
@@ -62,9 +65,9 @@ public class ContentOfNotesFragment extends Fragment {
         createContext();
 
         saveButton = view.findViewById(R.id.save_notes);
-        saveButton.setOnClickListener(v -> {
-            saveInstance();
-        });
+        saveButton.setOnClickListener(v ->
+            saveInstance()
+        );
 
         cancelButton = view.findViewById(R.id.cancel_notes);
         cancelButton.setOnClickListener(v -> {
@@ -123,7 +126,13 @@ public class ContentOfNotesFragment extends Fragment {
     }
 
     private void saveInstance() {
-        notes.setDateOfCreated(dateOfNotes.getText().toString());
+        String dateInString = dateOfNotes.getText().toString();
+        try {
+            Date date = new SimpleDateFormat("yyyy.MM.dd").parse(dateInString);
+            notes.setDateOfCreated(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
         notes.setDescription(descriptionOfNotes.getText().toString());
         Bundle bundle = new Bundle();
         bundle.putSerializable(KEY_NOTES, notes);

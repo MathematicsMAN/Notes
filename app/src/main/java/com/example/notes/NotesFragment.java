@@ -30,6 +30,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.Date;
+
 public class NotesFragment extends Fragment {
 
     private static final int REQUIRE_CODE = 90;
@@ -42,36 +44,33 @@ public class NotesFragment extends Fragment {
     private boolean isLandscape;
     private AppCompatActivity activity;
 
-    public static NotesFragment newInstance() {
-        return new NotesFragment();
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_notes, container, false);
         activity = (AppCompatActivity) getActivity();
-        initView(view);
+
+        initRecyclerView(view);
         setHasOptionsMenu(true);
 
-//        Toolbar toolbar = initToolbar(view);
+        Toolbar toolbar = initToolbar(view);
 //        initDrawer(view, toolbar);
 
         return view;
     }
 
-    private void initView(View view) {
+    private void initRecyclerView(View view) {
         recyclerView = view.findViewById(R.id.recycler_view_lines);
-        cardSource = new CardSourceImpl(getResources()).init();
-        initRecyclerView();
-    }
-
-    private void initRecyclerView() {
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         recyclerView.setLayoutManager(layoutManager);
 
-        adapter = new NotesAdapter(cardSource, this);
+        adapter = new NotesAdapter(this);
+
+        cardSource = new CardSourceFirebaseImpl<Notes>().init(cs ->
+                adapter.notifyDataSetChanged()
+        );
+        adapter.setCardSource(cardSource);
         recyclerView.setAdapter(adapter);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -80,9 +79,9 @@ public class NotesFragment extends Fragment {
             recyclerView.addItemDecoration(itemDecoration);
         }
 
-        adapter.setOnItemClickListener((view, position) -> {
-            showContentOfNotes(cardSource.getCardData(position));
-        });
+        adapter.setOnItemClickListener((view1, position) ->
+            showContentOfNotes(cardSource.getCardData(position))
+        );
 
         Log.d(LOG, "initRecyclerView()");
     }
@@ -136,6 +135,12 @@ public class NotesFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        adapter.notifyDataSetChanged();
+    }
+
+    @Override
     public void onCreateOptionsMenu(@NonNull Menu menu, @NonNull MenuInflater inflater) {
         inflater.inflate(R.menu.main, menu);
         MenuItem search = menu.findItem(R.id.menu_search);
@@ -185,6 +190,12 @@ public class NotesFragment extends Fragment {
             case R.id.popup_edit:
                 editNotes(position);
                 return true;
+            case R.id.popup_add:
+                addNewNotes();
+                return true;
+            case R.id.popup_clear:
+                clearAllNotes();
+                return true;
             default:
                 return super.onContextItemSelected(item);
         }
@@ -207,7 +218,8 @@ public class NotesFragment extends Fragment {
 //            currentNote = (Notes) savedInstanceState.getSerializable(ContentOfNotesFragment.KEY_NOTES);
             currentNote = cardSource.getCardData(0);
         } else {
-            currentNote = cardSource.getCardData(0);
+
+//            currentNote = cardSource.getCardData(0);
         }
 
         if (isLandscape) {
@@ -258,7 +270,7 @@ public class NotesFragment extends Fragment {
     private void addNewNotes() {
         cardSource.addCardData(new Notes("test title",
                 "test description",
-                "1970.01.01",
+                new Date(),
                 false));
         adapter.notifyItemInserted(cardSource.size() - 1);
         recyclerView.scrollToPosition(cardSource.size() - 1);

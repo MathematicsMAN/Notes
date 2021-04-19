@@ -9,6 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class ContentOfNotesActivity extends AppCompatActivity {
 
     Notes notes;
@@ -38,10 +42,18 @@ public class ContentOfNotesActivity extends AppCompatActivity {
         TextView title = findViewById(R.id.title_of_notes);
         EditText date = findViewById(R.id.date_of_created_notes);
         EditText description = findViewById(R.id.description_of_notes);
-        notes = new Notes(title.getText().toString(),
-                description.getText().toString(),
-                date.getText().toString(),
-                false);
+
+        String dateInString = date.getText().toString();
+        try {
+            Date dateType = new SimpleDateFormat("yyyy.MM.dd").parse(dateInString);
+            notes = new Notes(title.getText().toString(),
+                    description.getText().toString(),
+                    dateType,
+                    false);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
         intent.putExtra(ContentOfNotesFragment.KEY_NOTES, notes);
         setResult(RESULT_OK, intent);
         super.onSaveInstanceState(outState);
