@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -13,10 +14,13 @@ import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 
+import java.text.SimpleDateFormat;
+
 public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> {
 
     private CardSource<Notes> cardSource;
     public static OnItemClickListener listener;
+    public static OnCheckedChangeListener listenerChecked;
     public static Fragment fragment;
     public static int menuPosition;
 
@@ -86,12 +90,19 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
                 itemView.showContextMenu(10, 10);
                 return true;
             });
+
+            asCompleted.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (listenerChecked != null) {
+                    listenerChecked.OnCheckedChange(buttonView, getAdapterPosition(), isChecked);
+                }
+            });
         }
 
         public void bind(Notes cardData) {
+            SimpleDateFormat sdf = new SimpleDateFormat(NotesFragment.DATE_FORMAT);
             title.setText(cardData.getTitle());
             asCompleted.setChecked(cardData.isAsChecked());
-            dataOfCreated.setText(cardData.getDateOfCreated().toString());
+            dataOfCreated.setText(sdf.format(cardData.getDateOfCreated()));
         }
     }
 
@@ -101,5 +112,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
     public void setOnItemClickListener(OnItemClickListener itemClickListener) {
         this.listener = itemClickListener;
+    }
+
+    public interface OnCheckedChangeListener {
+        void OnCheckedChange(View view, int position, boolean isChecked);
+    }
+
+    public void setOnCheckedChangeListener(OnCheckedChangeListener itemCheckedListener) {
+        this.listenerChecked = itemCheckedListener;
     }
 }

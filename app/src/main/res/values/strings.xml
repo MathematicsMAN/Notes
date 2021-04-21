@@ -23,4 +23,10 @@
     <string name="button_cancel">Cancel</string>
     <string name="popup_clear">Clear all</string>
     <string name="popup_add">Add new</string>
+    <string name="warning">Warning!</string>
+    <string name="no">Да нет, наверное</string>
+    <string name="yes">Ну, да</string>
+    <string name="add_new">Add new note</string>
+    <string name="edit_note">Edit note</string>
+    <string name="menu_refresh">Refresh</string>
 </resources>

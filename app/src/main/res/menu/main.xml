@@ -24,4 +24,11 @@
         android:title="@string/menu_clear"
         app:showAsAction="ifRoom" />
 
+    <item
+        android:id="@+id/menu_refresh"
+        android:icon="@android:drawable/ic_menu_revert"
+        android:orderInCategory="40"
+        android:title="@string/menu_refresh"
+        app:showAsAction="ifRoom" />
+
 </menu>
