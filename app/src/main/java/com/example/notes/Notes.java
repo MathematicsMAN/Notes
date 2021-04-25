@@ -41,6 +41,10 @@ public class Notes implements Serializable {
         return asChecked;
     }
 
+    public void setAsChecked(boolean asChecked) {
+        this.asChecked = asChecked;
+    }
+
     public String getId() {
         return id;
     }

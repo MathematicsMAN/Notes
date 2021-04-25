@@ -63,7 +63,7 @@ public class ContentOfNotesFragment extends Fragment {
         descriptionOfNotes = view.findViewById(R.id.description_of_notes);
         dateOfNotes = view.findViewById(R.id.date_of_created_notes);
         createContext();
-
+/*
         saveButton = view.findViewById(R.id.save_notes);
         saveButton.setOnClickListener(v ->
             saveInstance()
@@ -76,7 +76,7 @@ public class ContentOfNotesFragment extends Fragment {
                 createContext();
             }
         });
-
+*/
         datePicker = view.findViewById(R.id.date_picker);
         datePicker.setVisibility(DatePicker.GONE);
         Calendar today = Calendar.getInstance();

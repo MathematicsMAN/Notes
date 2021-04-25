@@ -12,12 +12,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBarDrawerToggle;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.appcompat.widget.AppCompatTextView;
 import androidx.appcompat.widget.SearchView;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -30,11 +34,14 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class NotesFragment extends Fragment {
 
     private static final int REQUIRE_CODE = 90;
+    public static final String DATE_FORMAT = "yyyy.MM.dd";
     private final String LOG = "NotesFragment";
 
     private CardSource<Notes> cardSource;
@@ -80,8 +87,13 @@ public class NotesFragment extends Fragment {
         }
 
         adapter.setOnItemClickListener((view1, position) ->
-            showContentOfNotes(cardSource.getCardData(position))
+            showContentOfNotes(position)
         );
+
+        adapter.setOnCheckedChangeListener((view1, position, isChecked) -> {
+            cardSource.getCardData(position).setAsChecked(isChecked);
+//            adapter.notifyItemChanged(position);
+        });
 
         Log.d(LOG, "initRecyclerView()");
     }
@@ -168,6 +180,9 @@ public class NotesFragment extends Fragment {
             case R.id.menu_clear:
                 clearAllNotes();
                 return true;
+            case R.id.menu_refresh:
+                adapter.notifyDataSetChanged();
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }
@@ -228,11 +243,13 @@ public class NotesFragment extends Fragment {
         Log.d(LOG, "onActivityCreated()");
     }
 
-    private void showContentOfNotes(Notes currentNote) {
+    private void showContentOfNotes(int position) {
         if (isLandscape) {
-            showLandContentOfNotes(currentNote);
+            showLandContentOfNotes(cardSource.getCardData(position));
         } else {
-            showPortContentOfNotes(currentNote);
+//            cardSource.getCardData(position)
+//            showPortContentOfNotes(currentNote);
+            editNotes(position);
         }
     }
 
@@ -268,26 +285,98 @@ public class NotesFragment extends Fragment {
     }
 
     private void addNewNotes() {
-        cardSource.addCardData(new Notes("test title",
-                "test description",
-                new Date(),
-                false));
-        adapter.notifyItemInserted(cardSource.size() - 1);
-        recyclerView.scrollToPosition(cardSource.size() - 1);
+        final View contentView = getLayoutInflater().inflate(R.layout.fragment_content_of_notes, null);
+        EditText titleOfNotes = contentView.findViewById(R.id.title_of_notes);
+        EditText descriptionOfNotes = contentView.findViewById(R.id.description_of_notes);
+        EditText dateOfNotes = contentView.findViewById(R.id.date_of_created_notes);
+
+        titleOfNotes.setText("Title");
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        dateOfNotes.setText(sdf.format(new Date()));
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.add_new)
+                .setView(contentView)
+                .setPositiveButton(R.string.button_save, (dialog, which) -> {
+                    String dateInString = dateOfNotes.getText().toString();
+                    try {
+                        cardSource.addCardData(new Notes(titleOfNotes.getText().toString(),
+                                descriptionOfNotes.getText().toString(),
+                                sdf.parse(dateInString),
+                                false));
+                        adapter.notifyItemInserted(cardSource.size() - 1);
+                        recyclerView.scrollToPosition(cardSource.size() - 1);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.button_cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void editNotes(int position) {
-        showContentOfNotes(cardSource.getCardData(position));
-        adapter.notifyItemChanged(position);
+        final View contentView = getLayoutInflater().inflate(R.layout.fragment_content_of_notes, null);
+        EditText titleOfNotes = contentView.findViewById(R.id.title_of_notes);
+        EditText descriptionOfNotes = contentView.findViewById(R.id.description_of_notes);
+        EditText dateOfNotes = contentView.findViewById(R.id.date_of_created_notes);
+
+        titleOfNotes.setText(cardSource.getCardData(position).getTitle());
+        descriptionOfNotes.setText(cardSource.getCardData(position).getDescription());
+        SimpleDateFormat sdf = new SimpleDateFormat(DATE_FORMAT);
+        dateOfNotes.setText(sdf.format(cardSource.getCardData(position).getDateOfCreated()));
+
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.edit_note)
+                .setView(contentView)
+                .setPositiveButton(R.string.button_save, (dialog, which) -> {
+                    String dateInString = dateOfNotes.getText().toString();
+                    try {
+                        Notes note = new Notes(titleOfNotes.getText().toString(),
+                                descriptionOfNotes.getText().toString(),
+                                sdf.parse(dateInString),
+                                false);
+                        note.setId(cardSource.getCardData(position).getId());
+                        cardSource.updateCardData(position, note);
+                        adapter.notifyItemChanged(position);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+                    dialog.dismiss();
+                })
+                .setNegativeButton(R.string.button_cancel, (dialog, which) -> {
+                    dialog.dismiss();
+                })
+                .show();
     }
 
     private void deleteNotes(int position) {
-        cardSource.deleteCardData(position);
-        adapter.notifyItemRemoved(position);
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.warning)
+                .setMessage("This card will be deleted. Are you sure?")
+                .setCancelable(true)
+                .setNegativeButton(R.string.no, (dialog, which) -> {
+                })
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    cardSource.deleteCardData(position);
+                    adapter.notifyItemRemoved(position);
+                })
+                .show();
     }
 
     private void clearAllNotes() {
-        cardSource.clearData();
-        adapter.notifyDataSetChanged();
+        new AlertDialog.Builder(getContext())
+                .setTitle(R.string.warning)
+                .setMessage("All cards will be deleted. Are you sure?")
+                .setCancelable(true)
+                .setNegativeButton(R.string.no, (dialog, which) -> {
+                })
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    cardSource.clearData();
+                    adapter.notifyDataSetChanged();
+                })
+                .show();
     }
 }
