@@ -1,6 +1,8 @@
 package com.example.notes;
 
 public interface CardSource<T> {
+    CardSource<T> init(CardSourceResponse<T> cardSourceResponse);
+
     T getCardData(int position);
 
     int size();

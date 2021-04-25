@@ -20,9 +20,13 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
     public static Fragment fragment;
     public static int menuPosition;
 
-    public NotesAdapter(CardSource<Notes> cardSource, Fragment fragment) {
-        this.cardSource = cardSource;
+    public NotesAdapter(Fragment fragment) {
         this.fragment = fragment;
+    }
+
+    public void setCardSource(CardSource<Notes> cardSource) {
+        this.cardSource = cardSource;
+        notifyDataSetChanged();
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
@@ -40,7 +44,11 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        return cardSource.size();
+        if (cardSource != null) {
+            return cardSource.size();
+        } else {
+            return 0;
+        }
     }
 
     public int getMenuPosition() {
@@ -83,7 +91,7 @@ public class NotesAdapter extends RecyclerView.Adapter<NotesAdapter.ViewHolder> 
         public void bind(Notes cardData) {
             title.setText(cardData.getTitle());
             asCompleted.setChecked(cardData.isAsChecked());
-            dataOfCreated.setText(cardData.getDateOfCreated());
+            dataOfCreated.setText(cardData.getDateOfCreated().toString());
         }
     }
 

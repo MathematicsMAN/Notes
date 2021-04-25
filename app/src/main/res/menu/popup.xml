@@ -11,4 +11,14 @@
         android:orderInCategory="30"
         android:title="@string/popup_edit" />
 
+    <item
+        android:id="@+id/popup_add"
+        android:orderInCategory="30"
+        android:title="@string/popup_add" />
+
+    <item
+        android:id="@+id/popup_clear"
+        android:orderInCategory="30"
+        android:title="@string/popup_clear" />
+
 </menu>

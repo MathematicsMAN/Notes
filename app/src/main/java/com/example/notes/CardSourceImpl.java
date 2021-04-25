@@ -1,8 +1,11 @@
 package com.example.notes;
 
+import android.annotation.SuppressLint;
 import android.content.res.Resources;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class CardSourceImpl implements CardSource<Notes> {
@@ -15,16 +18,27 @@ public class CardSourceImpl implements CardSource<Notes> {
         this.resources = resources;
     }
 
-    public CardSourceImpl init() {
+    public CardSource<Notes> init(CardSourceResponse cardSourceResponse) {
         String[] notesTitle = resources.getStringArray(R.array.notes_titles);
         String[] description = resources.getStringArray(R.array.notes_description);
         String[] dataOfCreated = resources.getStringArray(R.array.notes_data_of_created);
 
         for (int i = 0; i < notesTitle.length; i++) {
-            dataSource.add(new Notes(notesTitle[i],
-                    description[i],
-                    dataOfCreated[i],
-                    false));
+            try {
+                @SuppressLint("SimpleDateFormat")
+                Date date = new SimpleDateFormat("yyyy.MM.dd").parse(dataOfCreated[i]);
+                dataSource.add(new Notes(notesTitle[i],
+                        description[i],
+                        date,
+                        false));
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+
+        if (cardSourceResponse != null) {
+            cardSourceResponse.initialized(this);
+
         }
         return this;
     }
